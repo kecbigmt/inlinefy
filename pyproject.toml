@@ -1,16 +1,18 @@
 [project]
-name = "html-mail-util"
+name = "inlinefy"
 version = "0.1.0"
-description = ""
+description = "A CLI tool that converts CSS in style tags to inline styles in HTML files"
 authors = [
-    {name = "kecy",email = "keishiro.oyama@kecy.me"}
+    {name = "kecy", email = "keishiro.oyama@kecy.me"}
 ]
 readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
-    "beautifulsoup4 (>=4.12.3,<5.0.0)"
+    "beautifulsoup4>=4.12.3,<5.0.0"
 ]
 
+[tool.poetry]
+package-mode = false
 
 [build-system]
 requires = ["poetry-core>=2.0.0,<3.0.0"]
