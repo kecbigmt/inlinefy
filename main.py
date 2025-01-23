@@ -85,6 +85,11 @@ def merge_styles(current_styles, new_styles, current_specificity, new_specificit
 def apply_inline_styles(html_text, css_rules):
     soup = BeautifulSoup(html_text, 'html.parser')
     
+    # bodyタグを取得
+    body = soup.find('body')
+    if not body:
+        return str(soup)
+
     # 要素ごとに適用されるスタイルを管理する辞書
     element_styles = {}
     
@@ -94,8 +99,8 @@ def apply_inline_styles(html_text, css_rules):
     # 各CSSルールに対して
     for rule in css_rules:
         try:
-            # セレクタを使って要素を直接選択
-            elements = soup.select(rule['selector'])
+            # セレクタを使って要素をbody内から選択
+            elements = body.select(rule['selector'])
             
             # 見つかった要素それぞれにスタイルを適用
             for element in elements:
