@@ -1,5 +1,5 @@
 [project]
-name = "inlinefy"
+name = "css-inliner"
 version = "0.1.0"
 description = "A CLI tool that converts CSS in style tags to inline styles in HTML files"
 authors = [

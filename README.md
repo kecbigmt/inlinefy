@@ -1,10 +1,10 @@
-# inlinefy
+# css-inliner
 
 A CLI tool that converts CSS in style tags to inline styles in HTML files while preserving media queries.
 
 ## Use Case
 
-This tool is particularly useful when creating HTML emails. Many email clients don't support `<style>` tags, requiring CSS to be written as inline styles. With inlinefy, you can:
+This tool is particularly useful when creating HTML emails. Many email clients don't support `<style>` tags, requiring CSS to be written as inline styles. With css-inliner, you can:
 
 1. Write your HTML email template using style tags for better maintainability
 2. Convert it to email-client-friendly HTML with inline styles
@@ -14,8 +14,8 @@ This tool is particularly useful when creating HTML emails. Many email clients d
 
 ```bash
 # Clone the repository
-git clone https://github.com/kecbigmt/inlinefy.git
-cd inlinefy
+git clone https://github.com/kecbigmt/css-inliner.git
+cd css-inliner
 
 # Install dependencies
 poetry install
