@@ -1,5 +1,9 @@
+#!/usr/bin/env python3
 from bs4 import BeautifulSoup
 import re
+import argparse
+import sys
+from pathlib import Path
 
 def calculate_specificity(selector):
     """
@@ -130,7 +134,7 @@ def apply_inline_styles(html_text, css_rules):
                 )
                 element_styles[element_id]['specificity'] = rule['specificity']
         except Exception as e:
-            print(f"Error processing selector {rule['selector']}: {str(e)}")
+            print(f"Error processing selector {rule['selector']}: {str(e)}", file=sys.stderr)
             continue
     
     # 最終的なスタイルを要素に適用
@@ -150,7 +154,7 @@ def apply_inline_styles(html_text, css_rules):
                 styles_list = [f"{prop}:{value}" for prop, value in merged_styles.items()]
                 element['style'] = ';'.join(styles_list)
         except Exception as e:
-            print(f"Error applying styles to element: {str(e)}")
+            print(f"Error applying styles to element: {str(e)}", file=sys.stderr)
             continue
     
     # スタイルタグを処理（メディアクエリは残す）
@@ -165,7 +169,7 @@ def apply_inline_styles(html_text, css_rules):
                 else:
                     style.decompose()
             except Exception as e:
-                print(f"Error processing media queries: {str(e)}")
+                print(f"Error processing media queries: {str(e)}", file=sys.stderr)
                 continue
         else:
             style.decompose()
@@ -187,11 +191,45 @@ def convert_css_to_inline(html_content):
     # インラインスタイルを適用
     return apply_inline_styles(html_content, css_rules)
 
-# 使用例
-with open('input.html', 'r', encoding='utf-8') as f:
-    html_content = f.read()
+def main():
+    parser = argparse.ArgumentParser(
+        description='HTMLファイル内のスタイルタグのCSSをインラインスタイルに変換します。メディアクエリは保持されます。'
+    )
+    parser.add_argument(
+        'input',
+        type=str,
+        help='入力HTMLファイルのパス'
+    )
+    parser.add_argument(
+        '-o', '--output',
+        type=str,
+        help='出力HTMLファイルのパス（指定がない場合は標準出力に出力します）'
+    )
 
-converted_html = convert_css_to_inline(html_content)
+    args = parser.parse_args()
 
-with open('output.html', 'w', encoding='utf-8') as f:
-    f.write(converted_html)
+    try:
+        input_path = Path(args.input)
+        if not input_path.exists():
+            print(f"Error: Input file '{args.input}' does not exist", file=sys.stderr)
+            sys.exit(1)
+
+        with open(input_path, 'r', encoding='utf-8') as f:
+            html_content = f.read()
+
+        converted_html = convert_css_to_inline(html_content)
+
+        if args.output:
+            output_path = Path(args.output)
+            output_path.parent.mkdir(parents=True, exist_ok=True)
+            with open(output_path, 'w', encoding='utf-8') as f:
+                f.write(converted_html)
+        else:
+            print(converted_html)
+
+    except Exception as e:
+        print(f"Error: {str(e)}", file=sys.stderr)
+        sys.exit(1)
+
+if __name__ == '__main__':
+    main()
