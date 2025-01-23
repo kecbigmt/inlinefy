@@ -103,9 +103,17 @@ def apply_inline_styles(html_text, css_rules):
                 element_id = id(element)
                 
                 if element_id not in element_styles:
+                    # 既存のインラインスタイルを初期値として使用
+                    existing_styles = {}
+                    if element.get('style'):
+                        for style_def in element['style'].split(';'):
+                            if ':' in style_def:
+                                prop, value = style_def.split(':', 1)
+                                existing_styles[prop.strip()] = value.strip()
+                    
                     element_styles[element_id] = {
-                        'styles': {},
-                        'specificity': (-1, -1, -1)  # 初期詳細度
+                        'styles': existing_styles,
+                        'specificity': (1, 0, 0)  # インラインスタイルの詳細度は最も高い
                     }
                 
                 # スタイルをマージ
@@ -124,7 +132,17 @@ def apply_inline_styles(html_text, css_rules):
     for element_id, style_info in element_styles.items():
         try:
             for element in soup.find_all(lambda tag: id(tag) == element_id):
-                styles_list = [f"{prop}:{value}" for prop, value in style_info['styles'].items()]
+                # 既存のインラインスタイルを取得
+                existing_styles = {}
+                if element.get('style'):
+                    for style_def in element['style'].split(';'):
+                        if ':' in style_def:
+                            prop, value = style_def.split(':', 1)
+                            existing_styles[prop.strip()] = value.strip()
+                
+                # 新しいスタイルと既存のスタイルをマージ
+                merged_styles = {**style_info['styles'], **existing_styles}
+                styles_list = [f"{prop}:{value}" for prop, value in merged_styles.items()]
                 element['style'] = ';'.join(styles_list)
         except Exception as e:
             print(f"Error applying styles to element: {str(e)}")
