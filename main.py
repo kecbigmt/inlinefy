@@ -193,17 +193,17 @@ def convert_css_to_inline(html_content):
 
 def main():
     parser = argparse.ArgumentParser(
-        description='HTMLファイル内のスタイルタグのCSSをインラインスタイルに変換します。メディアクエリは保持されます。'
+        description='Convert CSS in style tags to inline styles within HTML files while preserving media queries.'
     )
     parser.add_argument(
         'input',
         type=str,
-        help='入力HTMLファイルのパス'
+        help='Path to the input HTML file'
     )
     parser.add_argument(
         '-o', '--output',
         type=str,
-        help='出力HTMLファイルのパス（指定がない場合は標準出力に出力します）'
+        help='Path to the output HTML file (if not specified, output will be printed to stdout)'
     )
 
     args = parser.parse_args()
